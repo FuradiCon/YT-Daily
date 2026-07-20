@@ -524,7 +524,7 @@
     </div>
   </section>
 
-  <p class="note"><strong>Source:</strong> YouTube Analytics API, channel==MINE, day dimension. Auto-refreshed hourly from this machine — last updated 2026-07-20 13:05.</p>
+  <p class="note"><strong>Source:</strong> YouTube Analytics API, channel==MINE, day dimension. Auto-refreshed hourly from this machine — last updated 2026-07-20 13:06.</p>
 
   <footer>youtube_analytics.py · 2026-06-21 → 2026-07-18</footer>
 </div>
@@ -559,8 +559,8 @@ function absDeltaHtml(current, prior){
   const diff = current-prior;
   const dir = diff > 0 ? 'up' : diff < 0 ? 'down' : 'flat';
   const arrow = dir==='up' ? '▲' : dir==='down' ? '▼' : '→';
-  const sign = diff>0 ? '+' : '';
-  return `<div class="kpi-delta ${dir}">${arrow} ${sign}${diff} vs prior period</div>`;
+  const label = dir==='up' ? ('+'+diff) : String(Math.abs(diff));
+  return `<div class="kpi-delta ${dir}">${arrow} ${label} vs prior period</div>`;
 }
 
 (function renderKPIs(){
