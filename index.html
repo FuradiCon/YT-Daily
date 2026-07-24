@@ -317,6 +317,9 @@
     margin:0 0 6px;
   }
   h1{
+    display:flex;
+    align-items:center;
+    gap:12px;
     font-family:var(--font-display);
     font-weight:400;
     font-size:clamp(26px,4vw,34px);
@@ -324,6 +327,22 @@
     text-wrap:balance;
     margin:0;
     color:var(--text);
+  }
+  .comment-alert{
+    display:none;
+    align-items:center;
+    justify-content:center;
+    color:var(--accent);
+    filter:var(--accent-glow-filter);
+  }
+  .comment-alert.visible{ display:inline-flex; }
+  .comment-alert svg{ width:0.62em; height:0.62em; display:block; }
+  @media (prefers-reduced-motion:no-preference){
+    .comment-alert.visible{ animation:comment-alert-pulse 1.6s ease-in-out infinite; }
+  }
+  @keyframes comment-alert-pulse{
+    0%,100%{ opacity:1; transform:scale(1); }
+    50%{ opacity:0.5; transform:scale(1.15); }
   }
   .date-range{
     font-family:var(--font-mono);
@@ -712,7 +731,9 @@
     <header class="page-head">
       <div>
         <p class="eyebrow"></p>
-        <h1>Daily Performance</h1>
+        <h1>Daily Performance<span class="comment-alert" id="commentAlert" title="New comment received" role="img" aria-label="New comment received">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+        </span></h1>
       </div>
       <div class="date-range"></div>
     </header>
@@ -1255,6 +1276,7 @@ function renderChannel(idx){
   applyAccent(ch.accent);
   document.querySelector('.eyebrow').textContent = ch.name;
   document.querySelector('.date-range').textContent = ch.dateRangeLabel || 'No data yet';
+  document.getElementById('commentAlert').classList.toggle('visible', !isIG && !!ch.hasNewComments);
   document.querySelector('footer').textContent = ch.dateRangeIso
     ? ((isIG ? 'instagram_analytics.py · ' : 'youtube_analytics.py · ') + ch.dateRangeIso)
     : '';
