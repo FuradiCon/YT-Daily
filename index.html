@@ -332,13 +332,20 @@
     display:none;
     align-items:center;
     justify-content:center;
+    color:var(--text-secondary);
+    opacity:0.5;
+    filter:none;
+    transition:color 200ms ease, opacity 200ms ease;
+  }
+  .comment-alert.shown{ display:inline-flex; }
+  .comment-alert.glow{
     color:var(--accent);
+    opacity:1;
     filter:var(--accent-glow-filter);
   }
-  .comment-alert.visible{ display:inline-flex; }
   .comment-alert svg{ width:0.62em; height:0.62em; display:block; }
   @media (prefers-reduced-motion:no-preference){
-    .comment-alert.visible{ animation:comment-alert-pulse 1.6s ease-in-out infinite; }
+    .comment-alert.glow{ animation:comment-alert-pulse 1.6s ease-in-out infinite; }
   }
   @keyframes comment-alert-pulse{
     0%,100%{ opacity:1; transform:scale(1); }
@@ -731,7 +738,7 @@
     <header class="page-head">
       <div>
         <p class="eyebrow"></p>
-        <h1>Daily Performance<span class="comment-alert" id="commentAlert" title="New comment received" role="img" aria-label="New comment received">
+        <h1>Daily Performance<span class="comment-alert" id="commentAlert" title="Comments" role="img" aria-label="Comments">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
         </span></h1>
       </div>
@@ -1276,7 +1283,13 @@ function renderChannel(idx){
   applyAccent(ch.accent);
   document.querySelector('.eyebrow').textContent = ch.name;
   document.querySelector('.date-range').textContent = ch.dateRangeLabel || 'No data yet';
-  document.getElementById('commentAlert').classList.toggle('visible', !isIG && !!ch.hasNewComments);
+  const alertEl = document.getElementById('commentAlert');
+  const hasNew = !isIG && !!ch.hasNewComments;
+  alertEl.classList.toggle('shown', !isIG);
+  alertEl.classList.toggle('glow', hasNew);
+  const alertLabel = hasNew ? 'New comment awaiting reply' : 'Comments';
+  alertEl.title = alertLabel;
+  alertEl.setAttribute('aria-label', alertLabel);
   document.querySelector('footer').textContent = ch.dateRangeIso
     ? ((isIG ? 'instagram_analytics.py · ' : 'youtube_analytics.py · ') + ch.dateRangeIso)
     : '';
